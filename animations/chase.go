@@ -8,6 +8,9 @@ import (
 )
 
 type Chase struct {
+	Offset int
+	Length int
+
 	Color  *pifx.Pixel
 	Speed  float64
 	Easing easing.Easing
@@ -17,10 +20,12 @@ type Chase struct {
 }
 
 func (a *Chase) Render(time time.Time, strand *pifx.Strand) {
-	max := len(strand.Pixels)
+	if a.Length < 0 {
+		a.Length = len(strand.Pixels) - a.Offset
+	}
 
-	for n := 0; n < max; n++ {
-		opacity := (1 - (float64(n) / float64(max))) + a.offset
+	for n := 0; n < a.Length; n++ {
+		opacity := (1 - (float64(n) / float64(a.Length))) + a.offset
 
 		for opacity > 1 {
 			opacity -= 1
@@ -34,7 +39,7 @@ func (a *Chase) Render(time time.Time, strand *pifx.Strand) {
 		g := pifx.IntToByte(int(float64(a.Color.G) * opacity))
 		b := pifx.IntToByte(int(float64(a.Color.B) * opacity))
 
-		strand.Set(n, *pifx.NewPixel(r, g, b))
+		strand.Set(n+a.Offset, *pifx.NewPixel(r, g, b))
 	}
 
 	a.offset += float64(time.UnixNano()-a.lastFrame.UnixNano()) / 1e10 * a.Speed
