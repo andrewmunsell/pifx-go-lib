@@ -7,6 +7,9 @@ import (
 )
 
 type ColorWheel struct {
+	Offset int
+	Length int
+
 	Speed float64
 
 	lastFrame time.Time
@@ -14,16 +17,18 @@ type ColorWheel struct {
 }
 
 func (a *ColorWheel) Render(time time.Time, strand *pifx.Strand) {
-	max := len(strand.Pixels)
+	if a.Length < 0 {
+		a.Length = len(strand.Pixels) - a.Offset
+	}
 
-	for n := 0; n < max; n++ {
-		hue := (float64(n) / float64(max)) + a.offset
+	for n := 0; n < a.Length; n++ {
+		hue := (float64(n) / float64(a.Length)) + a.offset
 
 		for hue > 1 {
 			hue -= 1
 		}
 
-		strand.Set(n, *pifx.NewPixelHSL(hue, 1, 0.5))
+		strand.Set(a.Offset+n, *pifx.NewPixelHSL(hue, 1, 0.5))
 	}
 
 	a.offset += float64(time.UnixNano()-a.lastFrame.UnixNano()) / 1e10 * a.Speed
