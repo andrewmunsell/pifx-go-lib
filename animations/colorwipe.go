@@ -7,7 +7,8 @@ import (
 )
 
 type ColorWipe struct {
-	Color *pifx.Pixel
+	Offset int
+	Color  *pifx.Pixel
 }
 
 func (a *ColorWipe) Render(time time.Time, strand *pifx.Strand) {
