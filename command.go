@@ -4,7 +4,8 @@ import "fmt"
 
 type PixelCommand struct {
 	Offset  int
-	Action  int         // 0 write pixel, 1 change animation
+	Length  int
+	Action  int         // 0 write pixel data, 1 wipe pixels, 2 change animations
 	Payload interface{} // Data for the above action
 }
 
