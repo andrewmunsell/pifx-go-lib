@@ -3,7 +3,7 @@ package pifx
 import "fmt"
 
 type PixelCommand struct {
-	Action  int         // 0 write pixel data, 1 wipe pixels, 2 change animations
+	Action  int         // 0 write pixel data, 1 clear pixels, 2 append animation(s)
 	Payload interface{} // Data for the above action
 }
 
